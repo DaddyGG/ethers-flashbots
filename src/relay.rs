@@ -116,6 +116,7 @@ impl<S: Signer> Relay<S> {
             }
             Ok(_) => {
                 let text = res.text().await?;
+                println!("Response Text: {:?}", text);
                 let res: Response<R> = serde_json::from_str(&text)
                     .map_err(|err| RelayError::ResponseSerdeJson { err, text })?;
 
