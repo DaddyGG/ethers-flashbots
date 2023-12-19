@@ -115,7 +115,7 @@ impl<S: Signer> Relay<S> {
                 }
             }
             Ok(_) => {
-                let mut text = res.text().await?;
+               let mut text = res.text().await?;
                
                 if method == "eth_sendBundle"
                 { 
@@ -123,9 +123,9 @@ impl<S: Signer> Relay<S> {
                     // Check if the "result" field is null
                     if let Some(result) = parsed_response.get("result") {
 
-                        if self.url == "https://builder0x69.io"
-                        || self.url == "https://rsync-builder.xyz"
-                        || self.url == "https://rpc.lokibuilder.xyz"
+                        if self.url == Url::parse("https://builder0x69.io").unwrap() 
+                        || self.url == Url::parse("https://rsync-builder.xyz").unwrap()  
+                        || self.url == Url::parse("https://rpc.lokibuilder.xyz").unwrap()  
                         {
                             if result.is_null() ||  result == "nil"
                             {   
