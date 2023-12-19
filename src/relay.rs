@@ -126,7 +126,7 @@ impl<S: Signer> Relay<S> {
                     if let Some(result) = parsed_response.get("result") {
                         if result.is_null()
                         {
-                            text = r#"{"jsonrpc": "2.0","id": 1 ,"result": {"bundleHash": "0x9999"} }"#.to_string();
+                            text = r#"{""id": 1 , jsonrpc": "2.0","result": {"bundleHash": "0x9999"} }"#.to_string();
                         }
                     }
                 } 
