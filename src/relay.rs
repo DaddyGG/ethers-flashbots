@@ -142,6 +142,9 @@ impl<S: Signer> Relay<S> {
                         let unique_json_string = unique_json_vec.join("\n");
 
                         text = unique_json_string;
+
+                        println!("text {}", text);
+
                         
                     }
 
