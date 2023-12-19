@@ -120,13 +120,7 @@ impl<S: Signer> Relay<S> {
                 // Handling empty or null text
                 if text.is_empty() || text == "null" {
 
-                    text = r#"{
-                        "jsonrpc": "2.0",
-                        "id": "9999",
-                        "result": {
-                          "bundleHash": "0x9999"
-                        }
-                      }"#;
+                    text = r#"{"jsonrpc": "2.0","id": "9999","result": {"bundleHash": "0x9999"} }"#.to_string();
                 }
                 
                 let res: Response<R> = serde_json::from_str(&text)
