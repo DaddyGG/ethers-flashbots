@@ -162,7 +162,7 @@ impl<S: Signer> Relay<S> {
                         }
                     }
                     //If it is this builder we check cause it does not have any id
-                    else if self.url == Url::parse("https://rpc.payload.de").unwrap()  
+                    else if self.url == Url::parse("https://rpc.payload.de").unwrap() || self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
                     {
                         if parsed_response.get("id").is_none() 
                         {
