@@ -115,21 +115,27 @@ impl<S: Signer> Relay<S> {
                 }
             }
             Ok(_) => {
-                 let mut text = res.text().await?;
-                println!("Response Text: {:?}", text);
+                let mut text = res.text().await?;
                
                 if method == "eth_sendBundle"
                 { 
                     let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
-                    println!("parsed_response {}", parsed_response);
                     // Check if the "result" field is null
                     if let Some(result) = parsed_response.get("result") {
-                        if result.is_null()
+
+                        if self.url == "https://builder0x69.io"
+                        || self.url == "https://rsync-builder.xyz"
+                        || self.url == "https://rpc.lokibuilder.xyz"
                         {
-                            text = r#"{"id":1,"jsonrpc":"2.0","result":{"bundleHash":"0xdabb05c0936748614a1b114fdc302d8ec46bb2f8b998994f901ad255019c497f"}}"#.to_string();
+                            if result.is_null() ||  result == "nil"
+                            {   
+                                //We put a random hash considering the relay does not provide a bundle hash in his result
+                                text = r#"{"id":1,"jsonrpc":"2.0","result":{"bundleHash":"0xdabb05c0936748614a1b114fdc302d8ec46bb2f8b998994f901ad255019c497f"}}"#.to_string();
+                            }
                         }
+                        
                     }
-                } 
+                }
                 
                 let res: Response<R> = serde_json::from_str(&text)
                     .map_err(|err| RelayError::ResponseSerdeJson { err, text })?;
