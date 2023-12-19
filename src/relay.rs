@@ -116,7 +116,7 @@ impl<S: Signer> Relay<S> {
             }
             Ok(_) => {
               let mut text = res.text().await?;
-
+                println!("Response Text: {:?}", text);
                 // Parse the JSON response
                 let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
 
