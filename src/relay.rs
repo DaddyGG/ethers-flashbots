@@ -115,18 +115,7 @@ impl<S: Signer> Relay<S> {
                 }
             }
             Ok(_) => {
-              let mut text = res.text().await?;
-                println!("Response Text: {:?}", text);
-                // Parse the JSON response
-                let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
-
-                // Check if the "result" field is null
-                if let Some(result) = parsed_response.get("result") {
-                    if result.is_null()
-                    {
-                        text = r#"{\"id\":1,\"jsonrpc\":\"2.0\",\"result\":{\"bundleHash\":\"0x9999\"}}"#.to_string();
-                    }
-                }
+                let text = res.text().await?;
                 
                 let res: Response<R> = serde_json::from_str(&text)
                     .map_err(|err| RelayError::ResponseSerdeJson { err, text })?;
