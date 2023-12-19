@@ -143,16 +143,15 @@ impl<S: Signer> Relay<S> {
 
                         text = unique_json_string;
 
-                        println!("text {}", text);
-
-                        
+   
                     }
 
                     let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
                    
                     if self.url == Url::parse("https://builder0x69.io").unwrap() 
                     || self.url == Url::parse("https://rsync-builder.xyz").unwrap()  
-                    || self.url == Url::parse("https://rpc.lokibuilder.xyz").unwrap()  
+                    || self.url == Url::parse("https://rpc.lokibuilder.xyz").unwrap()
+                    || self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
                     {
                          // Check if the "result" field is null
                         if let Some(result) = parsed_response.get("result")
@@ -165,7 +164,7 @@ impl<S: Signer> Relay<S> {
                         }
                     }
                     //If it is this builder we check cause it does not have any id
-                    else if self.url == Url::parse("https://rpc.payload.de").unwrap() || self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
+                    else if self.url == Url::parse("https://rpc.payload.de").unwrap()
                     {
                         if parsed_response.get("id").is_none() 
                         {
