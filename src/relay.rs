@@ -117,7 +117,7 @@ impl<S: Signer> Relay<S> {
             Ok(_) => {
                let mut text = res.text().await?;
                
-               if method == "eth_sendBundle"
+                if method == "eth_sendBundle"
                 { 
                     println!("text {}", text);
                     let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
@@ -138,7 +138,7 @@ impl<S: Signer> Relay<S> {
                     }
                     else if self.url == Url::parse("https://rpc.payload.de").unwrap()  
                     {
-                        if parsed.get("id").is_none() 
+                        if parsed_response.get("id").is_none() 
                         {
                             text = r#"{"id":1,"jsonrpc":"2.0","result":{"bundleHash":"0xdabb05c0936748614a1b114fdc302d8ec46bb2f8b998994f901ad255019c497f"}}"#.to_string();
                         }
