@@ -12,6 +12,7 @@ use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use std::sync::atomic::{AtomicU64, Ordering};
 use thiserror::Error;
 use url::Url;
+use std::collections::HashSet;
 
 /// A Flashbots relay client.
 ///
@@ -119,14 +120,38 @@ impl<S: Signer> Relay<S> {
                
                 if method == "eth_sendBundle"
                 { 
-                    println!("text {}", text);
+                    //If it this this builder then we check cause they send double result
+                    if self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
+                    {
+                        
+                        // Split the input into individual JSON strings
+                        let split_json: Vec<&str> = text.split('\n').collect();
+
+                        // Create a HashSet to store unique JSON strings
+                        let mut unique_json_set: HashSet<&str> = HashSet::new();
+
+                        // Filter out duplicates and store unique JSON strings in the set
+                        for json_str in split_json {
+                            unique_json_set.insert(json_str);
+                            
+                        }
+                        // Convert the unique JSON strings set back into a vector
+                        let unique_json_vec: Vec<&str> = unique_json_set.into_iter().collect();
+
+                        // Join the unique JSON strings back into a single string
+                        let unique_json_string = unique_json_vec.join("\n");
+
+                        text = unique_json_string;
+                        
+                    }
+
                     let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
-                    // Check if the "result" field is null
+                   
                     if self.url == Url::parse("https://builder0x69.io").unwrap() 
                     || self.url == Url::parse("https://rsync-builder.xyz").unwrap()  
                     || self.url == Url::parse("https://rpc.lokibuilder.xyz").unwrap()  
                     {
-
+                         // Check if the "result" field is null
                         if let Some(result) = parsed_response.get("result")
                         {
                             if result.is_null() ||  result == "nil"
@@ -136,6 +161,7 @@ impl<S: Signer> Relay<S> {
                             }
                         }
                     }
+                    //If it is this builder we check cause it does not have any id
                     else if self.url == Url::parse("https://rpc.payload.de").unwrap()  
                     {
                         if parsed_response.get("id").is_none() 
@@ -143,12 +169,7 @@ impl<S: Signer> Relay<S> {
                             text = r#"{"id":1,"jsonrpc":"2.0","result":{"bundleHash":"0xdabb05c0936748614a1b114fdc302d8ec46bb2f8b998994f901ad255019c497f"}}"#.to_string();
                         }
                     }
-                    else if self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
-                    {
-                        
-                        text = text.trim_matches('"').to_string();;
-                        
-                    }
+                     
                 }
                 
                 let res: Response<R> = serde_json::from_str(&text)
