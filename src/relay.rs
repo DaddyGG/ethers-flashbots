@@ -119,6 +119,7 @@ impl<S: Signer> Relay<S> {
                
                 if method == "eth_sendBundle"
                 { 
+                    println!("text {}", text);
                     let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
                     // Check if the "result" field is null
                     if let Some(result) = parsed_response.get("result") {
