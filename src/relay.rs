@@ -125,7 +125,7 @@ impl<S: Signer> Relay<S> {
                     {
                         
                         // Split the input into individual JSON strings
-                        let split_json: Vec<&str> = text.split('\n').collect();
+                        let split_json: Vec<&str> = text.lines().filter(|&s| !s.trim().is_empty()).collect();
 
                         // Create a HashSet to store unique JSON strings
                         let mut unique_json_set: HashSet<&str> = HashSet::new();
