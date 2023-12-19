@@ -115,7 +115,21 @@ impl<S: Signer> Relay<S> {
                 }
             }
             Ok(_) => {
-                let text = res.text().await?;
+                 let mut text = res.text().await?;
+                println!("Response Text: {:?}", text);
+               
+                if method == "eth_sendBundle"
+                { 
+                    let parsed_response: serde_json::Value = serde_json::from_str(&text).expect("Failed to parse JSON response");
+                    println!("parsed_response {}", parsed_response);
+                    // Check if the "result" field is null
+                    if let Some(result) = parsed_response.get("result") {
+                        if result.is_null()
+                        {
+                            text = r#"{"jsonrpc": "2.0","id": 1 ,"result": {"bundleHash": "0x9999"} }"#.to_string();
+                        }
+                    }
+                } 
                 
                 let res: Response<R> = serde_json::from_str(&text)
                     .map_err(|err| RelayError::ResponseSerdeJson { err, text })?;
