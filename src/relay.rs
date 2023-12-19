@@ -115,18 +115,18 @@ impl<S: Signer> Relay<S> {
                 }
             }
             Ok(_) => {
-                let text = res.text().await?;
+               let mut text = res.text().await?;
 
                 // Handling empty or null text
                 if text.is_empty() || text == "null" {
-                    // Assuming an empty response when block hash is not present
-                    return Ok(Response {
-                        id: 0,
-                        jsonrpc: String::new(),
-                        data: ResponseData::Success {
-                            result: Default::default(),
-                        },
-                    });
+
+                    text = r#"{
+                        "jsonrpc": "2.0",
+                        "id": "9999",
+                        "result": {
+                          "bundleHash": "0x9999"
+                        }
+                      }"#;
                 }
                 
                 let res: Response<R> = serde_json::from_str(&text)
