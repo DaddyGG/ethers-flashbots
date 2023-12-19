@@ -143,6 +143,12 @@ impl<S: Signer> Relay<S> {
                             text = r#"{"id":1,"jsonrpc":"2.0","result":{"bundleHash":"0xdabb05c0936748614a1b114fdc302d8ec46bb2f8b998994f901ad255019c497f"}}"#.to_string();
                         }
                     }
+                    else if self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
+                    {
+                        
+                        text = text.trim_matches('"');
+                        
+                    }
                 }
                 
                 let res: Response<R> = serde_json::from_str(&text)
