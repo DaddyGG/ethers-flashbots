@@ -146,7 +146,7 @@ impl<S: Signer> Relay<S> {
                     else if self.url == Url::parse("https://rpc.lightspeedbuilder.info").unwrap()  
                     {
                         
-                        text = text.trim_matches('"');
+                        text = text.trim_matches('"').to_string();;
                         
                     }
                 }
